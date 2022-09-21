@@ -219,7 +219,9 @@ app.delete("/product/:id", async function (req, res) {
 // app.post("/register", async function (req, res) {
 
 // });
-
+app.get("/", (req, res) =>
+  res.send(`Server Running`)
+);
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`server running on port ${port}`));
