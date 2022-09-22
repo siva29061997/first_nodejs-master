@@ -11,7 +11,7 @@ const dotenv = require("dotenv").config()
 
 app.use(express.json());
 app.use(cors({
-    origin: "http://localhost:3001"
+    origin: "http://localhost:3000"
 }));
 
 app.get("/users", async function (req, res) {
@@ -199,9 +199,9 @@ app.delete("/product/:id", async function (req, res) {
 
     try {
 
-        const connection = await mongoClient.connect(URL)
+        const connection = await mongoClient.connect(URL);
 
-        const db = connection.db(DB)
+        const db = connection.db(DB);
 
         let user = await db.collection("products").findOneAndDelete({ _id: mongodb.ObjectId(req.params.id) });
 
@@ -217,11 +217,21 @@ app.delete("/product/:id", async function (req, res) {
 });
 
 // app.post("/register", async function (req, res) {
-
+//      try {
+//          let connection = await mongoClient.connect(URL);
+//          let db = connection.db(DB)
+//          await db.collection("user").insertOne(req.body);
+//          await connection.close()
+//          res.json({messege:"user registered"})
+//      } catch (error) {
+//         console.log(error)
+//         res.json(error)
+//      }
 // });
 app.get("/", (req, res) =>
-  res.send(`Server Running`)
+    res.send(`Server Running`)
 );
+
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`server running on port ${port}`));
