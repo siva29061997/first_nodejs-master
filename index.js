@@ -2,7 +2,9 @@ const express = require('express')
 const cors = require("cors")
 const app = express()
 const mongodb = require("mongodb")
-const mongoClient = mongodb.MongoClient
+const mongoClient = mongodb.MongoClient;
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken")
 const URL = process.env.DB
 const DB = "batch_37_wd_Tamil"
 const dotenv = require("dotenv").config()
@@ -14,7 +16,14 @@ app.use(cors({
     origin: "http://localhost:3000"
 }));
 
-app.get("/users", async function (req, res) {
+app.get("/users", function (req, res, next) {
+    console.log(req.headers)
+    if (req.headers.authorization) {
+        next()
+    } else {
+        res.status(401).json({ messege: "Unathorized" })
+    }
+}, async function (req, res) {
 
     try {
         // step 1:
@@ -216,18 +225,52 @@ app.delete("/product/:id", async function (req, res) {
 
 });
 
-// app.post("/register", async function (req, res) {
-//      try {
-//          let connection = await mongoClient.connect(URL);
-//          let db = connection.db(DB)
-//          await db.collection("user").insertOne(req.body);
-//          await connection.close()
-//          res.json({messege:"user registered"})
-//      } catch (error) {
-//         console.log(error)
-//         res.json(error)
-//      }
-// });
+app.post("/register", async function (req, res) {
+    try {
+        let connection = await mongoClient.connect(URL);
+        let db = connection.db(DB)
+
+        let salt = await bcrypt.genSalt(10);
+        console.log(salt)
+        let hash = await bcrypt.hash(req.body.password, salt);
+        console.log(hash)
+
+        req.body.password = hash
+
+        await db.collection("user").insertOne(req.body);
+
+        await connection.close()
+        res.json({ messege: "user registered" })
+    } catch (error) {
+        console.log(error)
+        res.json(error)
+    }
+});
+
+app.post("/login", async function (req, res) {
+    try {
+        let connection = await mongoClient.connect(URL);
+        let db = connection.db(DB);
+
+        let user = await db.collection("user").findOne({ email: req.body.email });
+        if (user) {
+            let compare = await bcrypt.compare(req.body.password, user.password);
+            if (compare) {
+                let token = jwt.sign({ _id: user._id }, "1234567890", { expiresIn: "60m" });
+                res.json({ token })
+            }
+            else {
+                res.json({ messege: "user name or password is wrong" })
+            }
+        } else {
+            res.status(401).json({ messege: "user name or password is wrong" });
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(600).json({ messege: "somthig went wrong" })
+    }
+});
+
 app.get("/", (req, res) =>
     res.send(`Server Running`)
 );
