@@ -16,14 +16,22 @@ app.use(cors({
     origin: "http://localhost:3000"
 }));
 
-app.get("/users", function (req, res, next) {
-    console.log(req.headers)
+let authenticate = (req, res, next) => {
     if (req.headers.authorization) {
-        next()
+        try {
+            let decode = jwt.verify(req.headers.authorization, process.env.SECRAT);
+            if (decode) {
+                next()
+            }
+        } catch (error) {
+            res.status(401).json({ messege: "Unathorized" });
+        }
     } else {
         res.status(401).json({ messege: "Unathorized" })
     }
-}, async function (req, res) {
+}
+
+app.get("/users",authenticate, async function (req, res) {
 
     try {
         // step 1:
@@ -43,7 +51,7 @@ app.get("/users", function (req, res, next) {
         });
     }
 });
-app.get("/products", async function (req, res) {
+app.get("/products", authenticate,async function (req, res) {
 
     try {
         // step 1:
@@ -65,7 +73,7 @@ app.get("/products", async function (req, res) {
 
 });
 
-app.post("/user", async function (req, res) {
+app.post("/user", authenticate,async function (req, res) {
 
     try {
 
@@ -84,7 +92,7 @@ app.post("/user", async function (req, res) {
         })
     }
 });
-app.post("/product", async function (req, res) {
+app.post("/product", authenticate,async function (req, res) {
 
     try {
 
@@ -105,7 +113,7 @@ app.post("/product", async function (req, res) {
 
 });
 
-app.get("/user/:id", async function (req, res) {
+app.get("/user/:id", authenticate,async function (req, res) {
 
     try {
 
@@ -124,7 +132,7 @@ app.get("/user/:id", async function (req, res) {
         })
     }
 });
-app.get("/product/:id", async function (req, res) {
+app.get("/product/:id", authenticate,async function (req, res) {
 
     try {
 
@@ -145,7 +153,7 @@ app.get("/product/:id", async function (req, res) {
 
 });
 
-app.put("/user/:id", async function (req, res) {
+app.put("/user/:id", authenticate,async function (req, res) {
 
     try {
 
@@ -164,7 +172,7 @@ app.put("/user/:id", async function (req, res) {
         })
     }
 });
-app.put("/product/:id", async function (req, res) {
+app.put("/product/:id", authenticate,async function (req, res) {
 
     try {
 
@@ -185,7 +193,7 @@ app.put("/product/:id", async function (req, res) {
 
 });
 
-app.delete("/user/:id", async function (req, res) {
+app.delete("/user/:id", authenticate,async function (req, res) {
 
     try {
 
@@ -204,7 +212,7 @@ app.delete("/user/:id", async function (req, res) {
         })
     }
 });
-app.delete("/product/:id", async function (req, res) {
+app.delete("/product/:id", authenticate,async function (req, res) {
 
     try {
 
@@ -256,14 +264,14 @@ app.post("/login", async function (req, res) {
         if (user) {
             let compare = await bcrypt.compare(req.body.password, user.password);
             if (compare) {
-                let token = jwt.sign({ _id: user._id }, "1234567890", { expiresIn: "60m" });
+                let token = jwt.sign({ _id: user._id }, process.env.SECRAT, { expiresIn: "60m" });
                 res.json({ token })
             }
             else {
-                res.json({ messege: "user name or password is wrong" })
+                res.json({ messege: "user name/password is wrong" })
             }
         } else {
-            res.status(401).json({ messege: "user name or password is wrong" });
+            res.status(401).json({ messege: "user name/password is wrong" });
         }
     } catch (error) {
         console.log(error)
