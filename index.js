@@ -265,9 +265,9 @@ app.post("/login", async function (req, res) {
         if (user) {
             let compare = await bcrypt.compare(req.body.password, user.password)
             if (compare) {
-                // res.json({messege : "login succesefully"})
-                let token = jwt.sign({_id : user._id},process.env.SECRAT,{expiresIn : "24h"});
-                res.json({token}) 
+                res.json({messege : "login succesefully"})
+                // let token = jwt.sign({ _id: user._id }, process.env.SECRAT, { expiresIn: "24h" });
+                // res.json({ token })
             } else {
                 res.json({ messege: "user name/password is wrong" })
             }
@@ -275,8 +275,8 @@ app.post("/login", async function (req, res) {
             res.status(401).json({ messege: "user name/password is wrong" })
         }
     } catch (error) {
-           console.log(error);
-           res.status(600).json({messege : "somthing went wrong"})
+        console.log(error);
+        res.status(600).json({ messege: "somthing went wrong" })
     }
 });
 
