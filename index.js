@@ -262,12 +262,13 @@ app.post("/login", async function (req, res) {
         let db = connection.db(DB);
 
         let user = await db.collection("user").findOne({ email: req.body.email })
+        console.log(user)
         if (user) {
             let compare = await bcrypt.compare(req.body.password, user.password)
             if (compare) {
-                // res.json({messege : "login succesefully"})
-                let token = jwt.sign({ _id: user._id }, process.env.SECRAT, { expiresIn: "24h" });
-                res.json({ token })
+                res.json({messege : "login succesefully"})
+                // let token = jwt.sign({ _id: user._id }, process.env.SECRAT, { expiresIn: "24h" });
+                // res.json({ token })
             } else {
                 res.json({ messege: "user name/password is wrong" })
             }
