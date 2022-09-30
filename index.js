@@ -267,7 +267,7 @@ app.post("/login", async function (req, res) {
             let compare = await bcrypt.compare(req.body.password, user.password)
             if (compare) {
                 // res.json({messege : "login succesefully"})
-                let token = jwt.sign({ emai: user.email }, process.env.SECRAT, { expiresIn: "24h" });
+                let token = jwt.sign({ email: user.email }, process.env.SECRAT, { expiresIn: "24h" });
                 res.json({ token })
             } else {
                 res.json({ messege: "user name/password is wrong" })
