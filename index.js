@@ -29,7 +29,7 @@ let authenticate = (req, res, next) => {
     }
 }
 
-app.get("/users",async function (req, res) {
+app.get("/users",authenticate,async function (req, res) {
 
     try {
         // step 1:
@@ -49,7 +49,7 @@ app.get("/users",async function (req, res) {
         });
     }
 });
-app.get("/products",async function (req, res) {
+app.get("/products",authenticate,async function (req, res) {
 
     try {
         // step 1:
@@ -71,7 +71,7 @@ app.get("/products",async function (req, res) {
 
 });
 
-app.post("/user",async function (req, res) {
+app.post("/user",authenticate,async function (req, res) {
 
     try {
 
@@ -90,7 +90,7 @@ app.post("/user",async function (req, res) {
         })
     }
 });
-app.post("/product",async function (req, res) {
+app.post("/product",authenticate,async function (req, res) {
 
     try {
 
@@ -111,7 +111,7 @@ app.post("/product",async function (req, res) {
 
 });
 
-app.get("/user/:id",async function (req, res) {
+app.get("/user/:id",authenticate,async function (req, res) {
 
     try {
 
@@ -130,7 +130,7 @@ app.get("/user/:id",async function (req, res) {
         })
     }
 });
-app.get("/product/:id",async function (req, res) {
+app.get("/product/:id",authenticate,async function (req, res) {
 
     try {
 
@@ -151,7 +151,7 @@ app.get("/product/:id",async function (req, res) {
 
 });
 
-app.put("/user/:id",async function (req, res) {
+app.put("/user/:id",authenticate,async function (req, res) {
 
     try {
 
@@ -170,7 +170,7 @@ app.put("/user/:id",async function (req, res) {
         })
     }
 });
-app.put("/product/:id",async function (req, res) {
+app.put("/product/:id",authenticate,async function (req, res) {
 
     try {
 
@@ -191,7 +191,7 @@ app.put("/product/:id",async function (req, res) {
 
 });
 
-app.delete("/user/:id",async function (req, res) {
+app.delete("/user/:id",authenticate,async function (req, res) {
 
     try {
 
@@ -210,7 +210,7 @@ app.delete("/user/:id",async function (req, res) {
         })
     }
 });
-app.delete("/product/:id",async function (req, res) {
+app.delete("/product/:id",authenticate,async function (req, res) {
 
     try {
 
