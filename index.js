@@ -17,7 +17,7 @@ app.use(cors());
 let authenticate = (req, res, next) => {
     if (req.headers.authorization) {
         try {
-            let decode = jwt.verify(req.headers.authorization, process.env.SECRAT);
+            let decode = jwt.verify(req.headers.authorization, process.env.SECRET);
             if (decode) {
                 next()
             }
@@ -265,7 +265,7 @@ app.post("/login", async function (req, res) {
             let compare = await bcrypt.compare(req.body.password, user.password)
             if (compare) {
                 // res.json({messege : "login succesefully"})
-                let token = jwt.sign({ email: user.email }, process.env.SECRAT, { expiresIn: "24h" });
+                let token = jwt.sign({ email: user.email }, process.env.SECRET, { expiresIn: "24h" });
                 res.json({ token })
             } else {
                 res.json({ messege: "user name/password is wrong" })
@@ -289,7 +289,7 @@ app.post("/login", async function (req, res) {
 //         if (user) {
 //             let compare = await bcrypt.compare(req.body.password, user.password);
 //             if (compare) {
-//                 let token = jwt.sign({ _id: user._id }, process.env.SECRAT, { expiresIn: "60m" });
+//                 let token = jwt.sign({ _id: user._id }, process.env.SECRET, { expiresIn: "60m" });
 //                 res.json({ token })
 //             }
 //             else {
