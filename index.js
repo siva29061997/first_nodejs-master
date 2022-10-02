@@ -12,9 +12,7 @@ const dotenv = require("dotenv").config()
 
 
 app.use(express.json());
-app.use(cors({
-    origin: "http://localhost:3000"
-}));
+app.use(cors());
 
 let authenticate = (req, res, next) => {
     if (req.headers.authorization) {
