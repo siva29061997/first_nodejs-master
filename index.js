@@ -29,7 +29,7 @@ let authenticate = (req, res, next) => {
     }
 }
 
-app.get("/users",authenticate,async function (req, res) {
+app.get("/users", authenticate, async function (req, res) {
 
     try {
         // step 1:
@@ -49,7 +49,7 @@ app.get("/users",authenticate,async function (req, res) {
         });
     }
 });
-app.get("/products",authenticate,async function (req, res) {
+app.get("/products", authenticate, async function (req, res) {
 
     try {
         // step 1:
@@ -71,7 +71,7 @@ app.get("/products",authenticate,async function (req, res) {
 
 });
 
-app.post("/user",authenticate,async function (req, res) {
+app.post("/user", authenticate, async function (req, res) {
 
     try {
 
@@ -90,7 +90,7 @@ app.post("/user",authenticate,async function (req, res) {
         })
     }
 });
-app.post("/product",authenticate,async function (req, res) {
+app.post("/product", authenticate, async function (req, res) {
 
     try {
 
@@ -111,7 +111,7 @@ app.post("/product",authenticate,async function (req, res) {
 
 });
 
-app.get("/user/:id",authenticate,async function (req, res) {
+app.get("/user/:id", authenticate, async function (req, res) {
 
     try {
 
@@ -130,7 +130,7 @@ app.get("/user/:id",authenticate,async function (req, res) {
         })
     }
 });
-app.get("/product/:id",authenticate,async function (req, res) {
+app.get("/product/:id", authenticate, async function (req, res) {
 
     try {
 
@@ -151,7 +151,7 @@ app.get("/product/:id",authenticate,async function (req, res) {
 
 });
 
-app.put("/user/:id",authenticate,async function (req, res) {
+app.put("/user/:id", authenticate, async function (req, res) {
 
     try {
 
@@ -170,7 +170,7 @@ app.put("/user/:id",authenticate,async function (req, res) {
         })
     }
 });
-app.put("/product/:id",authenticate,async function (req, res) {
+app.put("/product/:id", authenticate, async function (req, res) {
 
     try {
 
@@ -191,7 +191,7 @@ app.put("/product/:id",authenticate,async function (req, res) {
 
 });
 
-app.delete("/user/:id",authenticate,async function (req, res) {
+app.delete("/user/:id", authenticate, async function (req, res) {
 
     try {
 
@@ -210,7 +210,7 @@ app.delete("/user/:id",authenticate,async function (req, res) {
         })
     }
 });
-app.delete("/product/:id",authenticate,async function (req, res) {
+app.delete("/product/:id", authenticate, async function (req, res) {
 
     try {
 
@@ -266,16 +266,16 @@ app.post("/login", async function (req, res) {
             if (compare) {
                 // res.json({messege : "login succesefully"})
                 let token = jwt.sign({ email: user.email }, process.env.SECRET, { expiresIn: "24h" });
-                res.json({ token })
+                res.status(200).json({ token })
             } else {
-                res.json({ messege: "user name/password is wrong" })
+                res.status(401).json({ messege: "user name/password is wrong" })
             }
         } else {
             res.status(401).json({ messege: "user name/password is wrong" })
         }
     } catch (error) {
         console.log(error);
-        res.status(600).json({ messege: "somthing went wrong" })
+        res.status(400).json({ messege: "somthing went wrong" })
     }
 });
 
