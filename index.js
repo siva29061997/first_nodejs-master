@@ -6,7 +6,7 @@ const mongoClient = mongodb.MongoClient;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken")
 const URL = process.env.DB
-const DB = "batch_37_wd_Tamil"
+const DB = "practice"
 const dotenv = require("dotenv").config()
 
 
@@ -243,7 +243,7 @@ app.post("/register", async function (req, res) {
 
         req.body.password = hash
 
-        await db.collection("user").insertOne(req.body);
+        await db.collection("User").insertOne(req.body);
 
         await connection.close()
         res.json({ messege: "user registered" })
@@ -259,7 +259,7 @@ app.post("/login", async function (req, res) {
         let connection = await mongoClient.connect(URL);
         let db = connection.db(DB);
 
-        let user = await db.collection("user").findOne({ email: req.body.email })
+        let user = await db.collection("User").findOne({ email: req.body.email })
         console.log(user)
         if (user) {
             let compare = await bcrypt.compare(req.body.password, user.password)
